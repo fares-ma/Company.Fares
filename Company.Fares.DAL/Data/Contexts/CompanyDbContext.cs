@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Company.Fares.DAL.Data.Contexts
 {
-    internal class CompanyDbContext : DbContext
+    public class CompanyDbContext : DbContext
     {
 
         public CompanyDbContext() : base()
@@ -30,6 +30,7 @@ namespace Company.Fares.DAL.Data.Contexts
             optionsBuilder.UseSqlServer("Server=.;Database=CompanyDb;Trusted_Connection=True;TrustServerCertificate = True");
         }
 
-        public DbSet<Department>  departments { get; set; }
+        public DbSet<Department>  Departments { get; set; }
+        public object departments { get; set; }
     }
 }
