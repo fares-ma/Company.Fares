@@ -9,44 +9,13 @@ using System.Threading.Tasks;
 
 namespace Company.Fares.BLL.Repositories
 {
-    public class EmplyeeRepository : IEmployeeRepository
+    public class EmplyeeRepository : GenericRepository<Employee> ,IEmployeeRepository
     {
-        private readonly CompanyDbContext _Context;
-
-        public EmplyeeRepository(CompanyDbContext context)
+        public EmplyeeRepository(CompanyDbContext context) : base(context) // ASK CLR Create Object From CpmpanyDbContext
         {
-            _Context = context;
+            
         }
 
-        public IEnumerable<Employee> GetAll()
-        {
-          return _Context.Employees.ToList();
-        }
-
-        public Employee? Get(int id)
-        {
-            return _Context.Employees.Find();
-        }
-
-        public int Add(Employee model)
-        {
-             _Context.Employees.Add(model);
-            return _Context.SaveChanges();
-        }
-
-        public int Update(Employee model)
-        {
-            _Context.Employees.Update(model);
-            return _Context.SaveChanges();
-        }
-
-        public int Delete(Employee model)
-        {
-            _Context.Employees.Remove(model);
-            return _Context.SaveChanges();
-        }
-
-      
 
     }
 }
