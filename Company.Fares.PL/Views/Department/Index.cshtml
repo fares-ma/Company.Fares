@@ -33,13 +33,13 @@
                  <td>@item.Name</td>
                  <td>@item.CreateAt</td>
                  <td>
-                        <a asp-action="Details" class="btn btn-warning">Details</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Details</a>
                     </td>
                     <td>
-                        <a asp-action="Update" class="btn btn-success">Update</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Update</a>
                     </td>
                     <td>
-                        <a asp-action="Delete" class="btn btn-danger">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
             }
@@ -50,7 +50,7 @@
 }else{
     <div>
         <h4 class="mt-4 alert alert-info">
-            Ther are no Department :( 
+            There are no Department :( 
 
         </h4>
     </div>
