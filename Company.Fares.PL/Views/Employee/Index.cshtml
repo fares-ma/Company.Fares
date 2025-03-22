@@ -1,15 +1,15 @@
 ﻿
-@model IEnumerable<Department>
+@model IEnumerable<Employee>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>All Department</h1>
+<h1>All Employee</h1>
 <br />
 <br />
 
-<a asp-action="Create" class="btn btn-primary">Create Department</a>
+<a asp-action="Create"  class="btn btn-primary">Create Employee</a>
 <br />
 <br />
 
@@ -17,10 +17,17 @@
     <table class="table table-hover table-striped">
         <thead>
             <tr>    
-                <th>Code</th>
                 <th>Name</th>
-                <th>Date Of Creation</th>
-                <th>Details</th>
+                <th>Age</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>IsActive</th>
+                <th>IsDeleted</th>
+                <th>@Html.DisplayNameFor(Elfie => Elfie.HiringDate)</th>
+                <th>@Html.DisplayNameFor(Elfie => Elfie.CreateAt)</th>
+                <th>Dtails</th>
                 <th>Update</th>
                 <th>Delete</th>
             </tr>
@@ -29,8 +36,15 @@
             @foreach (var item in Model)
             {
                 <tr>
-                 <td>@item.Code</td>
                  <td>@item.Name</td>
+                 <td>@item.Age</td>
+                 <td>@item.Email</td>
+                 <td>@item.Address</td>
+                 <td>@item.Phone</td>
+                 <td>@item.Salary</td>
+                 <td>@item.IsActive</td>
+                 <td>@item.IsDeleted</td>
+                 <td>@item.HiringDate</td>
                  <td>@item.CreateAt</td>
                  <td>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning">Details</a>
@@ -49,8 +63,8 @@
 
 }else{
     <div>
-        <h4 class="mt-4 alert alert-info">
-            There are no Department :( 
+        <h4 class="mt-4 alert alert-success">
+            There are no Employee :( 
 
         </h4>
     </div>

@@ -13,17 +13,19 @@ namespace Company.Fares.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Bulit in MVC Services
-           
-            builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>(); // Allow  DI For DepartmentRepository
-            
+
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow  DI For DepartmentRepository
+            builder.Services.AddScoped<IEmployeeRepository, EmplyeeRepository>(); // Allow  DI For EmployeeRepository
+
+
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 
             }); // Allow  DI For CompanyDbContext
-          
-            
-            
+
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -47,3 +49,5 @@ namespace Company.Fares.PL
         }
     }
 }
+
+

@@ -21,7 +21,7 @@
         <input asp-for="CreateAt" class="form-control" readonly />
     </div>
     <div class="my-3">
-        <a asp-action="Edit" class="btn btn-warning">Edit </a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit </a>
         <a asp-action="Index" class="btn btnlink-light">Back To List </a>
     </div>
 </div>
