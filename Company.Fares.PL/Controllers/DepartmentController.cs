@@ -72,56 +72,47 @@ namespace Company.Fares.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            //if (id is null) return BadRequest("Invalid Id"); //400
+            if (id is null) return BadRequest("Invalid Id"); //400
 
-            //var department = _departmentRepository.Get(id.Value);
-            //if (department is null) return NotFound(new { StatusCode = 404, message = $"Department With Id:{id} is Not Found" });
+            var department = _departmentRepository.Get(id.Value);
+            if (department is null) return NotFound(new { StatusCode = 404, message = $"Department With Id:{id} is Not Found" });
 
-            return Details(id,"Edit");
+            var departmentDto = new CreateDepartmentDto()
+            {
+                Code = department.Code,
+                Name = department.Name,
+                CreateAt = department.CreateAt
+            };
+            return View(departmentDto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public IActionResult Edit([FromRoute] int id, Department model)
         {
 
             if (ModelState.IsValid)
             {
-                if (id != department.Id) return BadRequest(); //400 
-                var count = _departmentRepository.Update(department);
+                //if (id != model.Id) return BadRequest(); //400 
+                var department = new Department()
+                {
+                    Code = model.Code,
+                    Name = model.Name,
+                    CreateAt = model.CreateAt
+                };
+
+                var count = _departmentRepository.Update(model);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            return View(department);
+            return View(model);
         }
 
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Edit([FromRoute] int id, UpdateDepartmentDto model)
-        //{
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var department = new Department()
-        //        {
-        //            Id = id,
-        //            Code = model.Name,
-        //            Name = model.Name,
-        //            CreateAt = model.CreateAt
-        //        };
-        //        var count = _departmentRepository.Update(department);
-        //        if (count > 0)
-        //        {
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //    }
-
-        //    return View(model);
-        //}
+     
 
         [HttpGet]
         public IActionResult Delete(int? id)
@@ -136,20 +127,20 @@ namespace Company.Fares.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromRoute] int id, Department department)
+        public IActionResult Delete([FromRoute] int id, Department model)
         {
 
             if (ModelState.IsValid)
             {
-                if (id != department.Id) return BadRequest(); //400 
-                var count = _departmentRepository.Delete(department);
+                if (id != model.Id) return BadRequest(); //400 
+                var count = _departmentRepository.Delete(model);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
             }
 
-            return View(department);
+            return View(model);
         }
 
 
