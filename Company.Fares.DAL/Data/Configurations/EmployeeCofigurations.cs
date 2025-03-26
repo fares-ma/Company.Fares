@@ -19,6 +19,10 @@ namespace Company.Fares.DAL.Data.Configurations
             
             builder.Property(E => E.Salary)
                    .HasPrecision(18, 2);
+            builder.HasOne(E => E.Department)
+                .WithMany(D => D.Employees)
+                .HasForeignKey(E => E.DepartmentId)
+                .OnDelete(DeleteBehavior.SetNull);
 
         }
     }

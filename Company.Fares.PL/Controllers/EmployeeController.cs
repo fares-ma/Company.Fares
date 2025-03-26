@@ -1,4 +1,5 @@
-﻿using Company.Fares.BLL.Interfaces;
+﻿using AutoMapper;
+using Company.Fares.BLL.Interfaces;
 using Company.Fares.DAL.Models;
 using Company.Fares.PL.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -8,17 +9,41 @@ namespace Company.Fares.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        //private readonly IDepartmentRepository _departmentRepository;
+        private readonly IMapper _mapper;
 
         // ASK CLR Create Object From IEmployeeRepository
-        public EmployeeController(IEmployeeRepository employeeRepository )
+        public EmployeeController(
+            IEmployeeRepository employeeRepository ,
+            //IDepartmentRepository departmentRepository,
+            IMapper mapper
+            )
         {
             _employeeRepository = employeeRepository;
+            //_departmentRepository = departmentRepository;
+            _mapper = mapper;
         }
         [HttpGet] // GET: / Department/ Index
-        public IActionResult Index()
+        public IActionResult Index(string? SearchInput)
         {
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                 employees = _employeeRepository.GetAll();
+            }
+            else
+            {
+                 employees = _employeeRepository.GetByName(SearchInput);
+            }
+            
+            //// Dictionary  : 3 Property
+            //// 1. ViewData : Transfer Extra Infomation From Controller (Action)To View 
+            //ViewData["Message"] = "Hello From ViewData";
 
-            var employees = _employeeRepository.GetAll();
+
+            //// 2. ViewBag  : Transfer Extra Infomation From Controller (Action)To View 
+            //ViewBag.Message = new {Message = "Hello From ViewBag" };
+
 
             return View(employees);
         }
@@ -27,6 +52,9 @@ namespace Company.Fares.PL.Controllers
         public IActionResult Create()
         {
 
+
+          //var departments =  _departmentRepository.GetAll();
+          //  ViewData["departments"] = departments;
             return View();
 
         }
@@ -35,41 +63,58 @@ namespace Company.Fares.PL.Controllers
         {
             if (ModelState.IsValid) // Server Side Validation
             {
-               var employee = new Employee()
-               {
-                   Name = model.Name,
-                   Address = model.Address,
-                   Age = model.Age,
-                   CreateAt = model.CreateAt,   
-                   HiringDate = model.HiringDate,
-                   Email = model.Email,
-                   IsActive = model.IsActive,
-                   IsDeleted = model.IsDeleted,
-                   Phone = model.Phone,
-                   Salary = model.Salary
-               };
-
-                var count = _employeeRepository.Add(employee);
-                if (count > 0)
+                try
                 {
-                    return RedirectToAction(nameof(Index));
+                    // Manual Mapping
+                    //var employee = new Employee()
+                    //{
+                    //    Name = model.Name,
+                    //    Address = model.Address,
+                    //    Age = model.Age,
+                    //    CreateAt = model.CreateAt,
+                    //    HiringDate = model.HiringDate,
+                    //    Email = model.Email,
+                    //    IsActive = model.IsActive,
+                    //    IsDeleted = model.IsDeleted,
+                    //    Phone = model.Phone,
+                    //    Salary = model.Salary,
+                    //    DepartmentId = model.DepartmentId
+
+                    //};
+
+                   var employee = _mapper.Map<Employee>(model);
+
+                    var count = _employeeRepository.Add(employee);
+                    if (count > 0)
+                    {
+                        TempData["Message"] = "Employee is Created !!";
+
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                    ModelState.AddModelError("", ex.Message);
                 }
 
             }
-
-            return View();
+            return View(model);
+           
 
         }
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public IActionResult Details(int? id)
         {
             if (id is null) return BadRequest("Invalid Id"); //400
 
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { StatusCode = 404, message = $"Employee With Id:{id} is Not Found" });
-
-            return View(viewName, employee);
+           
+            
+            return View(employee);
 
 
 
@@ -78,50 +123,25 @@ namespace Company.Fares.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            //var departments = _departmentRepository.GetAll();
+            //ViewData["departments"] = departments;
             if (id is null) return BadRequest("Invalid Id"); //400
-
             var employee = _employeeRepository.Get(id.Value);
             if (employee is null) return NotFound(new { StatusCode = 404, message = $"Employee With Id:{id} is Not Found" });
-
-            var employeeDto = new CreateEmployeeDto()
-            {
-                Name = employee.Name,
-                Address = employee.Address,
-                Age = employee.Age,
-                CreateAt = employee.CreateAt,
-                HiringDate = employee.HiringDate,
-                Email = employee.Email,
-                IsActive = employee.IsActive,
-                IsDeleted = employee.IsDeleted,
-                Phone = employee.Phone,
-                Salary = employee.Salary
-            };
-            return View(employeeDto);
+            var dto = _mapper.Map<CreateEmployeeDto>(employee);
+            return View(dto);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, CreateEmployeeDto model)
+        public IActionResult Edit([FromRoute] int id, Employee model)
         {
 
             if (ModelState.IsValid)
             {
-                //if (id != model.Id) return BadRequest(); //400 
-                var employee = new Employee()
-                {
-                    Id = id,
-                    Name = model.Name,
-                    Address = model.Address,
-                    Age = model.Age,
-                    CreateAt = model.CreateAt,
-                    HiringDate = model.HiringDate,
-                    Email = model.Email,
-                    IsActive = model.IsActive,
-                    IsDeleted = model.IsDeleted,
-                    Phone = model.Phone,
-                    Salary = model.Salary
-                };
-                var count = _employeeRepository.Update(employee);
+                if (id != model.Id) return BadRequest(); //400 
+
+                var count = _employeeRepository.Update(model);
                 if (count > 0)
                 {
                     return RedirectToAction(nameof(Index));
@@ -164,7 +184,7 @@ namespace Company.Fares.PL.Controllers
             //var department = _departmentRepository.Get(id.Value);
             //if (department is null) return NotFound(new { StatusCode = 404, message = $"Department With Id:{id} is Not Found" });
 
-            return Details(id, "Delete");
+            return View(id);
         }
 
         [HttpPost]

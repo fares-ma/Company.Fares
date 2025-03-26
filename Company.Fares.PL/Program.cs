@@ -1,6 +1,8 @@
 using Company.Fares.BLL.Interfaces;
 using Company.Fares.BLL.Repositories;
 using Company.Fares.DAL.Data.Contexts;
+using Company.Fares.PL.Mapping;
+using Company.Fares.PL.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Fares.PL
@@ -13,7 +15,6 @@ namespace Company.Fares.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Bulit in MVC Services
-
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow  DI For DepartmentRepository
             builder.Services.AddScoped<IEmployeeRepository, EmplyeeRepository>(); // Allow  DI For EmployeeRepository
 
@@ -25,6 +26,16 @@ namespace Company.Fares.PL
             }); // Allow  DI For CompanyDbContext
 
 
+            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile())); // Allow  DI For AutoMapper
+
+            // Life Time
+            //builder.Services.AddScoped();    // Create One Object Per Request - UnReachable Object
+            //builder.Services.AddTransient(); // Create One Object Per Operation - Reachable Object
+            //builder.Services.AddSingleton(); // Create One Object Per Application - Reachable Object
+
+            builder.Services.AddScoped<IScopedService, ScopedService>(); // Per Request
+            builder.Services.AddTransient<ITransentService, TransentService>(); // Per Operation
+            builder.Services.AddSingleton<ISingletonService, SingletonService>(); // Per Application
 
             var app = builder.Build();
 
