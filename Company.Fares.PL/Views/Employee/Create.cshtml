@@ -1,7 +1,9 @@
-﻿@model CreateEmployeeDto
+﻿@model Employee
 
 @{
     ViewData["Title"] = "Create";
+    var Departments = new SelectList(ViewData["departments"] as IEnumerable<Department> ?? new List<Department>(), "Id", "Name");
+
 }
 
 <h1>Create Employee</h1>
@@ -9,7 +11,7 @@
 <br />
 <br />
 
-<form asp-action="Create">
+<form asp-action="Create" enctype="multipart/form-data">
     <partial name="EmployeePartialView/_CreateEditPartialView" />
     
    <div class="my-3">

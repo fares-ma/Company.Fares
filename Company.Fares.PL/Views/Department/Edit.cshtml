@@ -1,4 +1,4 @@
-﻿@model CreateDepartmentDto
+﻿@model Department;
 @{
     ViewData["Title"] = "Edit";
 }
@@ -10,7 +10,7 @@
     <partial name="DepartmentPartialView/_CreateEditPartialView" />
     
     <div class="my-3">
-        <input type="submit" value="Save" class="btn btn-warning" />
+        <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Index" class="btn btnlink-light">Back To List </a>
     </div>
 </form>

@@ -1,6 +1,7 @@
 using Company.Fares.BLL.Interfaces;
 using Company.Fares.BLL.Repositories;
 using Company.Fares.DAL.Data.Contexts;
+using Company.Fares.DAL.Models;
 using Company.Fares.PL.Mapping;
 using Company.Fares.PL.Services;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,12 @@ namespace Company.Fares.PL
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(); // Register Bulit in MVC Services
-            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow  DI For DepartmentRepository
-            builder.Services.AddScoped<IEmployeeRepository, EmplyeeRepository>(); // Allow  DI For EmployeeRepository
+            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow  DI For DepartmentRepository
+            //builder.Services.AddScoped<IEmployeeRepository, Employeerepository>(); // Allow  DI For EmployeeRepository
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Allow  DI For UnitOfWork
 
+            builder.Services.AddAutoMapper(typeof(EmployeeProfile));
+            
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {

@@ -11,11 +11,13 @@ namespace Company.Fares.BLL.Repositories
 {
     public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {
+        //public DepartmentRepository(CompanyDbContext context) : base(context)
+        //{
+
+        //}
         public DepartmentRepository(CompanyDbContext context) : base(context)
         {
         }
     }
-
-
 
 }
