@@ -39,12 +39,8 @@ namespace Company.Fares.PL.Controllers
             //// Dictionary  : 3 Property
             //// 1. ViewData : Transfer Extra Infomation From Controller (Action)To View 
             //ViewData["Message"] = "Hello From ViewData";
-
-
             //// 2. ViewBag  : Transfer Extra Infomation From Controller (Action)To View 
             //ViewBag.Message = new {Message = "Hello From ViewBag" };
-
-
             return View(employees);
         }
 
