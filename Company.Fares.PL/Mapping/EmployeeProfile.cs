@@ -9,8 +9,7 @@ namespace Company.Fares.PL.Mapping
     {
         public EmployeeProfile()
         {
-            CreateMap<CreateEmployeeDto, Employee>()
-                .ForMember(d =>d.Name, o => o.MapFrom(s => $"{s.Name} Hello"));
+            CreateMap<CreateEmployeeDto, Employee>().ForMember(D => D.DepartmentId, S => S.MapFrom(O => O.DepartmentId));
             CreateMap<Employee, CreateEmployeeDto>();
 
         }

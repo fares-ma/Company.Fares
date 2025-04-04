@@ -1,4 +1,4 @@
-﻿@model Department 
+﻿@model CreateDepartmentDto;
 @{
     ViewData["Title"] = "Details";
 }
@@ -10,7 +10,7 @@
 <div>
     <partial name="DepartmentPartialView/_DeleteDetailsPartialView" />
     <div class="my-3">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit </a>
+        <a asp-action="Edit" asp-route-id=" @ViewBag.DepartmentId" class="btn btn-warning">Edit </a>
         <a asp-action="Index" class="btn btnlink-light">Back To List </a>
     </div>
 </div>

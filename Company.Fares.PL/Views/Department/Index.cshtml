@@ -9,7 +9,7 @@
 <br />
 <br />
 
-<a asp-action="Create" class="btn btn-primary">Create Department</a>
+<a asp-action="Create" asp-controller="Department" class="btn btn-primary">Create Department</a>
 <br />
 <br />
 
@@ -32,7 +32,7 @@
                  <td>@item.Code</td>
                  <td>@item.Name</td>
                  <td>@item.CreateAt</td>
-                    <partial name="_ButtonPartialView" model="@item.Id" />
+                    <partial name="_ButtonPartialView" model="@item.Id.ToString()" />
                 </tr>
             }
         </tbody>

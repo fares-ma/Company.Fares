@@ -9,7 +9,7 @@ namespace Company.Fares.BLL.Interfaces
 {
     public interface IEmployeeRepository :IGenericRepository<Employee>
     {
-        List<Employee> GetByName(String name);
+        Task<List<Employee>> GetByNameAsync(string name);
 
     }
 }

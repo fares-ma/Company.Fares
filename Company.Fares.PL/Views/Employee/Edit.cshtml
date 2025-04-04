@@ -1,14 +1,17 @@
 ﻿@model CreateEmployeeDto
 @{
     ViewData["Title"] = "Edit";
+    var Departments = new SelectList(ViewData["departments"] as IEnumerable<Department> ?? new List<Department>(), "Id", "Name");
+
 }
 
 <h1>Edit Employee</h1>
 <br />
 <br />
-<form asp-action="Edit">
-    <partial name="EmployeePartialView/_CreateEditPartialView" model="@Model"/> 
- 
+<form asp-action="Edit" enctype="multipart/form-data">
+    <partial name="EmployeePartialView/_CreateEditPartialView" model="@Model"/>
+    <input asp-for="ImageName" hidden />
+
     <div class="my-3">
         <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Index" class="btn btnlink-light">Back To List </a>

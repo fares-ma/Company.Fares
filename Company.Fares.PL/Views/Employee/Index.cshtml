@@ -1,58 +1,49 @@
-﻿
-@model IEnumerable<Employee>
+﻿@model IEnumerable<Employee>
 
 @{
     ViewData["Title"] = "Index";
-    // ViewData["Message"];
-    string? ViewDataMessage = ViewData["Message"] as string;
-    // string? ViewBagMessage = ViewBag.Message;
+    //ViewData["Message"];
+    // string? ViewBagMessage = ViewBag.Message;// More Flexible "dynamic datatype"
+    // string? ViewDataMessage = ViewBag.Message;
 }
 
 <h1>All Employee</h1>
+
 <br />
 <br />
-
-@* <div class="m-3 alert alert-danger">
-    <p> @ViewData["Message"]</p>
-</div>
- *@
-@* 
-<div class="m-3 alert alert-danger">
-    <p> @ViewBag.Message</p>
-</div>
- *@
-
-@if (!string.IsNullOrEmpty(TempData["Message"] as string))
-{
-    <div class="m-3 alert alert-info">
-        <p>
-            @TempData["Message"]
-        </p>
-
-    </div>
-}
-
 <form>
-   <div class="container m-4">
+    <div class="container">
         <div class="row">
             <div class="col-6">
-                <input id="SearchInput" placeholder="Search By Name" name="SearchInput" class="form-control" />
+                <input id="SearchInput" placeholder="Search by name" name="SearchInput" class="form-control" />
             </div>
-            <div ="col-6">
+            <div class="col-6">
                 <input type="submit" class="btn btn-success" value="Search" />
             </div>
         </div>
-   </div>
+    </div>
 </form>
+<br />
+<br />
+@if (!string.IsNullOrEmpty(TempData["Message"] as string))
+{
+    <div class="m-3 alert alert-info">
+        <p>@TempData["Message"]</p>
+    </div>
+}
 
-<a asp-action="Create"  class="btn btn-primary">Create Employee</a>
+
+<a asp-action="Create" asp-controller="Employee" class="btn btn-primary"> Create Employee</a>
+
 <br />
 <br />
 
-@if(Model.Count() > 0){
+@if (Model.Count() > 0)
+{
     <table class="table table-hover table-striped">
         <thead>
-            <tr>    
+            <tr>
+                <th>Image</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
@@ -61,10 +52,10 @@
                 <th>Salary</th>
                 <th>IsActive</th>
                 <th>IsDeleted</th>
-                <th>HiringDate</th>
-                <th>CreateAt</th>
-                <th>Department</th>
-                <th>Dtails</th>
+                <th>@Html.DisplayNameFor(E => E.HiringDate)</th>
+                <th>@Html.DisplayNameFor(E => E.CreateAt)</th>
+                <th>Department Name</th>
+                <th>Details</th>
                 <th>Update</th>
                 <th>Delete</th>
             </tr>
@@ -73,36 +64,40 @@
             @foreach (var item in Model)
             {
                 <tr>
-                 <td>@item.Name</td>
-                 <td>@item.Age</td>
-                 <td>@item.Email</td>
-                 <td>@item.Address</td>
-                 <td>@item.Phone</td>
-                 <td>@item.Salary</td>
-                 <td>@item.IsActive</td>
-                 <td>@item.IsDeleted</td>
-                 <td>@item.HiringDate</td>
-                 <td>@item.CreateAt</td>
-                 
-                 @if(item.Department is null ){
-                     <td>No Department</td>
-                 }else{
-                        <td>@item.Department?.Name</td>
-                 }
+                    @*D:\Route\C#\Assignments\MVC\Company.Route\Company.Route.PL\wwwroot\files\*@
+                    <td>
+                        <img src="@Url.Content("~/files/images/" + item.ImageName)" class="img-fluid rounded-circle" />
+                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Age</td>
+                    <td>@item.Email</td>
+                    <td>@item.Address</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Salary</td>
+                    <td>@item.IsActive</td>
+                    <td>@item.IsDeleted</td>
+                    <td>@item.HiringDate</td>
+                    <td>@item.CreateAt</td>
+                    @if (item.Department is null)
+                    {
+                        <td>No Department</td>
+                    }
+                    else
+                    {
+                        <td>@item.Department.Name</td>
+                    }
 
-                    <partial name="_ButtonPartialView" model="@item.Id" />
+                    <partial name="_ButtonPartialView" model="@item.Id.ToString()" />
+
                 </tr>
             }
         </tbody>
-
     </table>
-
-}else{
-    <div>
-        <h4 class="mt-4 alert alert-success">
-            There are no Employee :( 
-
-        </h4>
+}
+else
+{
+    <div class="mt-4 alert alert-info">
+        <h4>There are No Employees :(</h4>
     </div>
 }
 
