@@ -1,0 +1,31 @@
+﻿@model RoleToReturnDto
+
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Employee</h1>
+
+
+
+<br />
+<br />
+
+<form asp-action="Create" enctype="multipart/form-data">
+   
+    <partial name="EmployeePartialView/_CreatePartialView" />
+
+    <div class="my-3">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        <a asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+
+@section ValidationSection {
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"> </script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"> </script>
+}
+

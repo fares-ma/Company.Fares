@@ -25,7 +25,8 @@ namespace Company.Fares.PL
 
 
             builder.Services.AddIdentity<AppUser, IdentityRole>()
-               .AddEntityFrameworkStores<CompanyDbContext>() ;
+               .AddEntityFrameworkStores<CompanyDbContext>()
+               .AddDefaultTokenProviders();
 
 
 

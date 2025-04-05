@@ -1,8 +1,9 @@
 ﻿using Company.Fares.DAL.Models;
 using Company.Fares.PL.Dtos;
+using Company.Fares.PL.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+//using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace Company.Fares.PL.Controllers
 {
@@ -131,6 +132,109 @@ namespace Company.Fares.PL.Controllers
 
         #endregion
 
+
+        #region Forget Password
+
+        [HttpGet]
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendResetPasswordUrl(ForgetPasswordDto model)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user is not null)
+                {
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var url = Url.Action("ResetPassword", "Account", new { email = model.Email, token }, Request.Scheme);
+
+                    var email = new Email()
+                    {
+                        To = model.Email,
+                        Subject = "Reset Password",
+                        Body = url
+                    };
+
+                    var flag = EmailSettings.SendEmail(email);
+                    if (flag)
+                    {
+                    return RedirectToAction("CheckYourInbox");
+
+                    }
+
+
+
+                }
+
+            }
+            ModelState.AddModelError("", "Invalid Reset Password Operation");
+            return View("ForgetPassword", model);
+        }
+
+        [ HttpGet]
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+
+
+        #endregion
+
+
+        #region Reset Password
+
+        [HttpGet]
+        public IActionResult ResetPassword(string email , string token)
+        {
+           TempData["email"] = email;
+           TempData["token"] = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword( ResetPasswordDto model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var email = TempData["email"] as string;
+                var token = TempData["token"] as string;    
+
+                if(email is null || token is null) return BadRequest("Invalid Operations");
+                var user = _userManager.FindByEmailAsync(email);
+                if (user is not null)
+                {
+                    var result = await _userManager.ResetPasswordAsync(user.Result, token, model.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("SignIn");
+                    }
+                 
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid User");
+                }
+
+
+            }
+
+            return View();
+        }
+
+
+
+
+        #endregion
+
+
     }
-    
+
 }
