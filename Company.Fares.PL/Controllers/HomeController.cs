@@ -2,11 +2,13 @@ using System.Diagnostics;
 using System.Text;
 using Company.Fares.PL.Models;
 using Company.Fares.PL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
 namespace Company.Fares.PL.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
