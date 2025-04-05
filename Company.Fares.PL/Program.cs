@@ -4,6 +4,7 @@ using Company.Fares.DAL.Data.Contexts;
 using Company.Fares.DAL.Models;
 using Company.Fares.PL.Mapping;
 using Company.Fares.PL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Company.Fares.PL
@@ -21,7 +22,12 @@ namespace Company.Fares.PL
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Allow  DI For UnitOfWork
 
             builder.Services.AddAutoMapper(typeof(EmployeeProfile));
-            
+
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>()
+               .AddEntityFrameworkStores<CompanyDbContext>() ;
+
+
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
@@ -31,6 +37,13 @@ namespace Company.Fares.PL
 
 
             builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile())); // Allow  DI For AutoMapper
+
+
+            builder.Services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Account/SignIn";
+               
+            }); 
 
             // Life Time
             //builder.Services.AddScoped();    // Create One Object Per Request - UnReachable Object
@@ -55,6 +68,9 @@ namespace Company.Fares.PL
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
