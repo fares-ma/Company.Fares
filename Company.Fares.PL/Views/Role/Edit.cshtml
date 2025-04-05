@@ -1,0 +1,31 @@
+﻿@model RoleToReturnDto
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit Role</h1>
+<br />
+<br />
+
+<form asp-action="Edit" enctype="multipart/form-data">
+
+    <partial name="EmployeePartialView/_CreatePartialView" />
+
+
+    <a asp-action="AddOrRemoveUsers" asp-route-roleId = "@Model.Id" class="btn btn-success">Add or Remove User</a>
+
+
+
+
+    <div class="my-3">
+        <input type="submit" value="Save" class="btn btn-warning" />
+        <a asp-action="Index" class="btn btn-light">Back To List</a>
+    </div>
+</form>
+
+@section ValidationSection {
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"> </script>
+
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"> </script>
+}
