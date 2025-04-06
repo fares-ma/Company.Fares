@@ -1,6 +1,7 @@
 ﻿using Company.Fares.DAL.Models;
 using Company.Fares.PL.Dtos;
 using Company.Fares.PL.Helpers;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 //using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
@@ -11,6 +12,7 @@ namespace Company.Fares.PL.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IMailService _mailService;
 
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
         {
@@ -233,6 +235,35 @@ namespace Company.Fares.PL.Controllers
 
 
         #endregion
+
+        //public IActionResult GoogleLogin()
+        //{
+        //    var prop = new AuthenticationProperties()
+        //    {
+        //        RedirectUri = Url.Action("GoogleResponse")
+        //    };
+        //    return Challenge(prop, GoogleDefaults.AuthenticationScheme);
+        //}
+
+        //public async Task<IActionResult> GoogleResponse()
+        //{
+        //    var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+        //    var cliams = result.Principal.Identities.FirstOrDefault().Claims.Select(
+        //        claim => new
+        //        {
+        //            claim.Type,
+        //            claim.Value,
+        //            claim.Issuer,
+        //            claim.OriginalIssuer,
+
+        //        }
+
+
+        //        );
+
+        //    return RedirectToAction("Index", "Home");
+        //}
 
 
     }

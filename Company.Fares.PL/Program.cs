@@ -2,8 +2,10 @@ using Company.Fares.BLL.Interfaces;
 using Company.Fares.BLL.Repositories;
 using Company.Fares.DAL.Data.Contexts;
 using Company.Fares.DAL.Models;
+using Company.Fares.PL.Helpers;
 using Company.Fares.PL.Mapping;
 using Company.Fares.PL.Services;
+using Company.Fares.PL.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +30,9 @@ namespace Company.Fares.PL
                .AddEntityFrameworkStores<CompanyDbContext>()
                .AddDefaultTokenProviders();
 
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 
+            builder.Services.AddScoped<IMailService, MailService>();
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
