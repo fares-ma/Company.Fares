@@ -29,9 +29,9 @@ namespace Company.Fares.BLL.Repositories
 
 
 
-        public async ValueTask  DisposeAsync()
+        ValueTask IAsyncDisposable.DisposeAsync()
         {
-            await _context.DisposeAsync();
+           return _context.DisposeAsync();
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿@model SignInDto
-
-
 @{
 	ViewData["Title"] = "SignIn";
 	Layout = "~/Views/Shared/_AuthLayout.cshtml";
@@ -8,14 +6,12 @@
 
 <div class="main-agileinfo">
 	<div class="agileits-top">
-		<div asp-validation-summary="All" class="m-3 alert alert-info"></div>
+		<div asp-validation-summary="All" class="m-3 alert-danger">
+		</div>
 		<form asp-action="SignIn">
-
-
 
 			<input class="text email" asp-for="Email" placeholder="Email" required="">
 			<input class="text" asp-for="Password" placeholder="Password" required="">
-
 			<div class="wthree-text">
 				<label class="anim">
 					<input asp-for="RememberMe" class="checkbox">
@@ -23,22 +19,22 @@
 				</label>
 				<div class="clear"> </div>
 			</div>
-			<input type="submit" value="SIGNIN">
+			<input type="submit" value="Sign In">
 		</form>
-		@*Sign In With Google*@
+
+		@*Sign in with google*@
 		<br />
 		<a asp-action="GoogleLogin" style="display:block ; margin:0 auto ; text-align : center; color : white; width:50% "> SignIn With Google</a>
 		<br />
+		<a asp-action="FacebookLogin" style="display:block ; margin:0 auto ; text-align : center; color : white; width:50% "> SignIn With Facebook</a>
 
-		<p>Don't have an Account? <a asp-action="SignUp">Create New Account ?</a></p>
-		<p> <a asp-action="ForgetPassword">Forget Password ?</a></p>
-
+		<p>Don't have an Account? <a asp-action="SignUp"> Create New ACcount</a></p>
+		<p> <a asp-action="ForgetPassword"> Forget Password</a></p>
 	</div>
 </div>
 
-@section ValidationSection {
+@section Validation
+{
 	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-
 }
-
