@@ -6,6 +6,7 @@ using Company.Fares.PL.Helpers;
 using Company.Fares.PL.Mapping;
 using Company.Fares.PL.Services;
 using Company.Fares.PL.Settings;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
@@ -29,16 +30,17 @@ namespace Company.Fares.PL
                 o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
-            //builder.Services.AddAuthentication(o =>
-            //{
-            //    o.DefaultAuthenticateScheme = FacebookDefaults.AuthenticationScheme;
-            //    o.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+            builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = FacebookDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
 
-            //}).AddFacebook(o =>
-            //{
-            //    o.ClientId = builder.Configuration["Authentication:Facebook:AppId"];
-            //    o.ClientSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
-            //});
+            }).AddFacebook(o =>
+            {
+                o.ClientId = builder.Configuration["Authentication:Facebook:AppId"];
+                o.ClientSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+            });
+
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
