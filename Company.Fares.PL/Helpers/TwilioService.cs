@@ -1,30 +1,32 @@
-﻿using Company.Fares.PL.Settings;
+﻿using Company.Fares.DAL.Models.Sms;
+using Company.Fares.PL.Settings;
+using Microsoft.Extensions.Options;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace Company.Fares.PL.Helpers
 {
-    //public class TwilioService(Microsoft.Extensions.Options.IOptions<TwilioSettings> _options) : ITwilioService
-    //{
-    //    public MessageResource SendSms(Sms sms)
-    //    {
-    //        // Initialize Connetion
-    //        TwilioClient.Init(_options.Value.AccountSID, _options.Value.AuthToken);
+    public class TwilioService(IOptions<TwilioSettings> options) : ITwilioService
+    {
+        public MessageResource SendSms(Sms sms)
+        {
+            // Intialize Connection
 
+            TwilioClient.Init(options.Value.AccountSID, options.Value.AuthToken);
+           
 
+            // Build Message
 
-    //        // Build Message
+            var message = MessageResource.Create(
+                body: sms.Body,
+                to: sms.To,
+                from: options.Value.PhoneNumber
+                //from:new Twilio.Types.PhoneNumber("+201143941265")
+                );
 
-    //        var message = MessageResource.Create(
-    //            body: sms.Body,
-    //            to: sms.To,
-    //            from: _options.Value.PhoneNumber
+            // return Message
+            return message;
+        }
 
-    //        );
-
-
-    //        // return Message
-
-    //        return message;
-
-    //    }
-    //}
+    }
 }

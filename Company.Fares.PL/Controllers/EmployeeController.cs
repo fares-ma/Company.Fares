@@ -4,6 +4,7 @@ using Company.Fares.BLL.Repositories;
 using Company.Fares.DAL.Models;
 using Company.Fares.PL.Dtos;
 using Company.Fares.PL.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,7 +33,7 @@ namespace Company.Fares.PL.Controllers
         public async Task<IActionResult> Index(string? SearchInput)
         {
             IEnumerable<Employee> employees;
-            if (SearchInput.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(SearchInput))
             {
                 employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
 
@@ -50,6 +51,24 @@ namespace Company.Fares.PL.Controllers
             // 3 TempData : 
             return View(employees);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string? SearchInput)
+        {
+            IEnumerable<Employee> employees;
+            if (string.IsNullOrEmpty(SearchInput))
+            {
+                employees = await _unitOfWork.EmployeeRepository.GetAllAsync();
+
+            }
+            else
+            {
+                employees = await _unitOfWork.EmployeeRepository.GetByNameAsync(SearchInput);
+            }
+
+            return PartialView("EmployeePartialView/EmployeesTablePartialView", employees);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -152,6 +171,8 @@ namespace Company.Fares.PL.Controllers
             return View(model);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id is null) return BadRequest("Invalid Id");
@@ -165,6 +186,8 @@ namespace Company.Fares.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete([FromRoute] int id, CreateEmployeeDto model)
         {
             if (ModelState.IsValid)

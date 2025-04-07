@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Company.Fares.DAL.Data.Migrations
+namespace Company.Fares.DAL.Migrations
 {
     [DbContext(typeof(CompanyDbContext))]
     partial class CompanyDbContextModelSnapshot : ModelSnapshot
@@ -119,7 +119,7 @@ namespace Company.Fares.DAL.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Company.Fares.DAL.Models.Employee", b =>
@@ -174,7 +174,7 @@ namespace Company.Fares.DAL.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

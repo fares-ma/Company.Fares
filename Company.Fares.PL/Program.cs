@@ -6,6 +6,8 @@ using Company.Fares.PL.Helpers;
 using Company.Fares.PL.Mapping;
 using Company.Fares.PL.Services;
 using Company.Fares.PL.Settings;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,47 +19,61 @@ namespace Company.Fares.PL
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+
+            }).AddGoogle(o =>
+            {
+                o.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                o.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
+            //builder.Services.AddAuthentication(o =>
+            //{
+            //    o.DefaultAuthenticateScheme = FacebookDefaults.AuthenticationScheme;
+            //    o.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+
+            //}).AddFacebook(o =>
+            //{
+            //    o.ClientId = builder.Configuration["Authentication:Facebook:AppId"];
+            //    o.ClientSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+            //});
+
             // Add services to the container.
-            builder.Services.AddControllersWithViews(); // Register Bulit in MVC Services
-            //builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow  DI For DepartmentRepository
-            //builder.Services.AddScoped<IEmployeeRepository, Employeerepository>(); // Allow  DI For EmployeeRepository
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); // Allow  DI For UnitOfWork
-
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>(); // Allow Dependency injection for DepartmentRepository
+            builder.Services.AddScoped<IEmployeeRepository, Employeerepository>(); // Allow Dependency injection for DepartmentRepository
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(EmployeeProfile));
-
-
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
-               .AddEntityFrameworkStores<CompanyDbContext>()
-               .AddDefaultTokenProviders();
-
-            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
-
-            builder.Services.AddScoped<IMailService, MailService>();
-
+            builder.Services.AddAutoMapper(typeof(DepartmentProfile));
             builder.Services.AddDbContext<CompanyDbContext>(options =>
             {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); // instead of writing connection string
+            }); // Allow Dependency Injection for CompanyDbContext // which allow CLR to create object from it whenever he wants
 
-            }); // Allow  DI For CompanyDbContext
+            // differ by Life Time
+            //builder.Services.AddScoped();     // Create object life time per request - unreachable object
+            //builder.Services.AddTransient();  // Create object life time per operation 
+            //builder.Services.AddSingleton();  // Create object life time per application
 
+            builder.Services.AddScoped<IScopedService, ScopedService>(); // per request
+            builder.Services.AddTransient<ITransentService, TransentService>(); // per operation
+            builder.Services.AddSingleton<ISingletonService, SingletonService>(); //per application
 
-            builder.Services.AddAutoMapper(M => M.AddProfile(new EmployeeProfile())); // Allow  DI For AutoMapper
-
-
+            builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CompanyDbContext>().AddDefaultTokenProviders();
             builder.Services.ConfigureApplicationCookie(config =>
             {
                 config.LoginPath = "/Account/SignIn";
-               
-            }); 
+                config.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
-            // Life Time
-            //builder.Services.AddScoped();    // Create One Object Per Request - UnReachable Object
-            //builder.Services.AddTransient(); // Create One Object Per Operation - Reachable Object
-            //builder.Services.AddSingleton(); // Create One Object Per Application - Reachable Object
 
-            builder.Services.AddScoped<IScopedService, ScopedService>(); // Per Request
-            builder.Services.AddTransient<ITransentService, TransentService>(); // Per Operation
-            builder.Services.AddSingleton<ISingletonService, SingletonService>(); // Per Application
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+            builder.Services.AddScoped<IMailService, MailService>();
+            builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection(nameof(TwilioSettings)));
+            builder.Services.AddScoped<ITwilioService, TwilioService>();
+
 
             var app = builder.Build();
 
@@ -73,7 +89,6 @@ namespace Company.Fares.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

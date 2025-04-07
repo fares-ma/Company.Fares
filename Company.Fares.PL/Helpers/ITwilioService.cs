@@ -1,7 +1,10 @@
-﻿namespace Company.Fares.PL.Helpers
+﻿using Company.Fares.DAL.Models.Sms;
+using Twilio.Rest.Api.V2010.Account;
+
+namespace Company.Fares.PL.Helpers
 {
-    //public interface ITwilioService
-    //{
-    //    public MessageResource SendSms(Sms sms);
-    //}
+    public interface ITwilioService
+    {
+         MessageResource SendSms( Sms sms);
+    }
 }

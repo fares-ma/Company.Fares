@@ -3,11 +3,14 @@ using Company.Fares.BLL.Interfaces;
 using Company.Fares.BLL.Repositories;
 using Company.Fares.DAL.Models;
 using Company.Fares.PL.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace Company.Fares.PL.Controllers
 {
     // MVC Controller for Department
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -106,62 +109,60 @@ namespace Company.Fares.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var department = new Department()
-                {
-                    Id = id,
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
+                //var department = new Department()
+                //{
+                //    Id = id,
+                //    Name = model.Name,
+                //    Code = model.Code,
+                //    CreateAt = model.CreateAt,
+                //};
+                var department = _mapper.Map<Department>(model);
+                department.Id = id;
                 _unitOfWork.DepartmentRepository.Update(department);
-                var Count = await _unitOfWork.CompleteAsync();
-                if (Count > 0)
+                var result = await _unitOfWork.CompleteAsync();
+                if (result > 0)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index");
                 }
+                else
+                    return BadRequest();
             }
 
             return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int? Id)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (Id is null) return BadRequest("Invalid Id"); //400
+            //if (id is null) return BadRequest("Invalid Id");
+            //var result = _departmentRepository.Get(id.Value);
 
-            var departments = await _unitOfWork.DepartmentRepository.GetAsync(Id.Value);
+            //if (result is null) return NotFound(new { StatusCode = 404, Message = $"Department with Id: {id} is Not found" });
 
-            if (departments is null) return NotFound(new { statusCode = 404, message = $"Department With Id : {Id} is not Found" });
+            return await Details(id, "Delete");
 
-            var dto = new CreateDepartmentDto()
-            {
-                Name = departments.Name,
-                Code = departments.Code,
-                CreateAt = departments.CreateAt
-            };
-
-            return View(dto);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete([FromRoute] int id, CreateDepartmentDto model)
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> Delete([FromRoute] int id, Department model)
         {
             if (ModelState.IsValid)
             {
-                var department = new Department()
+                if (id == model.Id)
                 {
-                    Id = id,
-                    Code = model.Code,
-                    Name = model.Name,
-                    CreateAt = model.CreateAt
-                };
-
-                _unitOfWork.DepartmentRepository.Delete(department);
-                var Count = await _unitOfWork.CompleteAsync();
-                if (Count > 0)
-                {
-                    return RedirectToAction(nameof(Index));
+                    _unitOfWork.DepartmentRepository.Delete(model);
+                    var result = await _unitOfWork.CompleteAsync();
+                    if (result > 0)
+                    {
+                        return RedirectToAction("Index");
+                    }
                 }
+                else
+                    return BadRequest();
             }
 
             return View(model);
