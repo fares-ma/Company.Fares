@@ -146,7 +146,7 @@ namespace Company.Fares.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddorRemoveUser(string roleId)
+        public async Task<IActionResult> AddorRemoveUsers(string roleId)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role is null) return NotFound();
@@ -178,7 +178,7 @@ namespace Company.Fares.PL.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddorRemoveUser(string roleId, List<UserInRoleDto> users)
+        public async Task<IActionResult> AddorRemoveUsers(string roleId, List<UserInRoleDto> users)
         {
             var role = await _roleManager.FindByIdAsync(roleId);
             if (role is null) return NotFound();
