@@ -1,8 +1,38 @@
-﻿@{
+﻿@model AppUser
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <br />
+    <h1 class="display-4">Welcome, @Model.FirstName @Model.LastName</h1>
+    <br />
+    <br />
+    <br />
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a style="width: 250px; height: 100px; background-color: #0077b6; color: white; border: none;"
+           class="btn d-flex align-items-center justify-content-center"
+           asp-area="" asp-controller="Employee" asp-action="Index">
+            Explore Employees
+        </a>
+
+        <a style="width: 250px; height: 100px; background-color: #90e0ef; color: #03045e; border: none;"
+           class="btn d-flex align-items-center justify-content-center"
+           asp-area="" asp-controller="Department" asp-action="Index">
+            Explore Departments
+        </a>
+
+        <a style="width: 250px; height: 100px; background-color: #03045e; color: white; border: none;"
+           class="btn d-flex align-items-center justify-content-center"
+           asp-area="" asp-controller="Role" asp-action="Index">
+            Explore Roles
+        </a>
+
+        <a style="width: 250px; height: 100px; background-color: #ef476f; color: white; border: none;"
+           class="btn d-flex align-items-center justify-content-center"
+           asp-area="" asp-controller="Account" asp-action="SignOut">
+            Sign Out
+        </a>
+    </div>
 </div>
